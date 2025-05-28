@@ -3,6 +3,7 @@ from django.views import View
 from django.http import HttpResponse, HttpResponseRedirect
 from whether.utils.get_lat_lon import get_cordinate
 from whether.utils.get_whether import whether
+from whether.models import City, UsersHistory
 
 
 class GenerateHtmlView(View):
@@ -27,6 +28,12 @@ class GenerateHtmlView(View):
         if list_whether==None:
             return {'Error': 'Данный город не поддерживается'}
         else:
+            if self.request.user.is_authenticated:
+                city, created = City.objects.get_or_create(
+                    name=processed_text,
+                    defaults={'name': processed_text}
+                )
+                UsersHistory.objects.create(user=self.request.user, city=city)
             return {
                 'list_whether': list_whether,
                 'user_text': processed_text
@@ -36,4 +43,3 @@ class GenerateHtmlView(View):
         context = self.get_initial_data(request)
         return render(request, 'main.html', context)
 
-    

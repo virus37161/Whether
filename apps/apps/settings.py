@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'whether',
+    'sign'
 ]
 
 MIDDLEWARE = [
